@@ -1,10 +1,124 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Hello World</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <title>Spurs Dribble Dash — PoC</title>
+  <style>
+    body { 
+      margin: 0; 
+      background: #000; 
+      color: #fff; 
+      font-family: sans-serif; 
+    }
+    canvas { 
+      background: linear-gradient(0deg, #e7c28f, #d8b17b); 
+      display: block; 
+      margin: 0 auto; 
+    }
+  </style>
 </head>
 <body>
-    <h1>Hello World</h1>
+  <canvas id="game" width="414" height="736"></canvas>
+  
+  <script>
+    const W = 414, H = 736;
+    const c = document.getElementById('game');
+    const ctx = c.getContext('2d');
+    
+    let y = H / 2, vy = 0, score = 0;
+    const ballR = 16;
+    let obstacles = [], running = true;
+    let t = 0;
+
+    function spawn() {
+      const gap = 160;
+      const top = Math.random() * (H - 300) + 50;
+      obstacles.push({ x: W + 60, top: top, gap: gap });
+    }
+
+    function loop() {
+      if (!running) return;
+      ctx.clearRect(0, 0, W, H);
+
+      vy += 0.5;
+      y += vy;
+
+      if (y > H - 50) end();
+
+      if (t % 100 === 0) spawn();
+
+      obstacles.forEach(o => {
+        o.x -= 2;
+        ctx.fillStyle = '#111';
+        ctx.fillRect(o.x, 0, 40, o.top);
+        ctx.fillRect(o.x, o.top + o.gap, 40, H - (o.top + o.gap));
+
+        if (o.x + 40 < 200 && !o.scored) {
+          score++;
+          o.scored = true;
+        }
+
+        if (
+          circleRect(200, y, ballR, o.x, 0, 40, o.top) ||
+          circleRect(200, y, ballR, o.x, o.top + o.gap, 40, H - (o.top + o.gap))
+        ) end();
+      });
+
+      obstacles = obstacles.filter(o => o.x > -50);
+
+      ctx.fillStyle = '#fff';
+      ctx.beginPath();
+      ctx.arc(200, y, ballR, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillText('Score: ' + score, 10, 20);
+
+      t++;
+      requestAnimationFrame(loop);
+    }
+
+    function circleRect(cx, cy, cr, rx, ry, rw, rh) {
+      const x = Math.max(rx, Math.min(cx, rx + rw));
+      const y = Math.max(ry, Math.min(cy, ry + rh));
+      const dx = cx - x, dy = cy - y;
+      return dx * dx + dy * dy <= cr * cr;
+    }
+
+    function end() {
+      running = false;
+      alert('Game over! Score: ' + score);
+    }
+
+    window.addEventListener('keydown', e => {
+      if (e.code === 'Space') {
+        vy = -8;
+        if (!running) {
+          running = true;
+          score = 0;
+          y = H / 2;
+          vy = 0;
+          obstacles = [];
+          t = 0;
+          loop();
+        }
+      }
+    });
+
+    c.addEventListener('click', () => {
+      vy = -8;
+      if (!running) {
+        running = true;
+        score = 0;
+        y = H / 2;
+        vy = 0;
+        obstacles = [];
+        t = 0;
+        loop();
+      }
+    });
+
+    loop();
+  </script>
 </body>
 </html>
