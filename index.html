@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-  <title>Spurs Dribble Dash — PoC</title>
+  <title>Spurs Dribble Dash</title>
   <style>
     :root{
       --spurs-black:#000000;
@@ -32,7 +32,6 @@
   <div class="wrap">
     <div class="hud" style="gap:.6rem">
       <span class="title">Spurs Dribble Dash</span>
-      <span class="badge">PoC</span>
       <button id="btnStart" class="btn">Start</button>
       <button id="btnPause" class="btn">Pause</button>
       <button id="btnSound" class="btn">Sound: On</button>
@@ -48,7 +47,6 @@
           <p style="margin:.4rem 0 1rem">Tap / Click / Press Space to bounce the ball and weave past obstacles. Survive to score. 🏀</p>
           <p style="margin:.2rem 0 .8rem">Tip: short, rhythmic taps mimic a dribble; longer holds give a stronger hop.</p>
           <button id="btnOverlayStart" class="btn">Play</button>
-          <div class="foot" style="margin-top:.8rem">PoC build • mobile friendly • no assets required</div>
         </div>
       </div>
     </div>
@@ -331,7 +329,7 @@
     ctx.fillRect(0,0,W,28);
     ctx.fillStyle = '#fff';
     ctx.font = '700 14px system-ui';
-    ctx.fillText(`Score ${state.score}`, 12, 20);
+    ctx.fillText(`Score ${state.score}`, 32, 20);
     ctx.textAlign = 'right';
     ctx.fillText(`Best ${state.best}`, W-12, 20);
     ctx.textAlign = 'left';
